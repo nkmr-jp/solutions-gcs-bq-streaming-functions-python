@@ -42,7 +42,7 @@ BQ_DATASET = 'mydataset'
 BQ_TABLE = 'mytable'
 ERROR_TOPIC = 'projects/%s/topics/%s' % (PROJECT_ID, 'streaming_error_topic')
 SUCCESS_TOPIC = 'projects/%s/topics/%s' % (PROJECT_ID, 'streaming_success_topic')
-DB = firestore.Client()
+# DB = firestore.Client()
 CS = storage.Client()
 PS = pubsub_v1.PublisherClient()
 BQ = bigquery.Client()
@@ -52,16 +52,20 @@ def streaming(data, context):
     '''This function is executed whenever a file is added to Cloud Storage'''
     bucket_name = data['bucket']
     file_name = data['name']
-    db_ref = DB.document(u'streaming_files/%s' % file_name)
-    if _was_already_ingested(db_ref):
-        _handle_duplication(db_ref)
-    else:
-        try:
-            _insert_into_bigquery(bucket_name, file_name)
-            _handle_success(db_ref)
-        except Exception:
-            _handle_error(db_ref)
-
+    # db_ref = DB.document(u'streaming_files/%s' % file_name)
+    # if _was_already_ingested(db_ref):
+    #     _handle_duplication(db_ref)
+    # else:
+    #     try:
+    #         _insert_into_bigquery(bucket_name, file_name)
+    #         _handle_success(db_ref)
+    #     except Exception:
+    #         _handle_error(db_ref)
+    try:
+        _insert_into_bigquery(bucket_name, file_name)
+        _handle_success(file_name)
+    except Exception:
+        _handle_error(file_name)
 
 def _was_already_ingested(db_ref):
     status = db_ref.get()
@@ -91,26 +95,26 @@ def _insert_into_bigquery(bucket_name, file_name):
         raise BigQueryError(errors)
 
 
-def _handle_success(db_ref):
-    message = 'File \'%s\' streamed into BigQuery' % db_ref.id
-    doc = {
-        u'success': True,
-        u'when': _now()
-    }
-    db_ref.set(doc)
-    PS.publish(SUCCESS_TOPIC, message.encode('utf-8'), file_name=db_ref.id)
+def _handle_success(file_name):
+    message = 'File \'%s\' streamed into BigQuery' % file_name
+    # doc = {
+    #     u'success': True,
+    #     u'when': _now()
+    # }
+    # db_ref.set(doc)
+    PS.publish(SUCCESS_TOPIC, message.encode('utf-8'), file_name=file_name)
     logging.info(message)
 
 
-def _handle_error(db_ref):
-    message = 'Error streaming file \'%s\'. Cause: %s' % (db_ref.id, traceback.format_exc())
-    doc = {
-        u'success': False,
-        u'error_message': message,
-        u'when': _now()
-    }
-    db_ref.set(doc)
-    PS.publish(ERROR_TOPIC, message.encode('utf-8'), file_name=db_ref.id)
+def _handle_error(file_name):
+    message = 'Error streaming file \'%s\'. Cause: %s' % (file_name, traceback.format_exc())
+    # doc = {
+    #     u'success': False,
+    #     u'error_message': message,
+    #     u'when': _now()
+    # }
+    # db_ref.set(doc)
+    PS.publish(ERROR_TOPIC, message.encode('utf-8'), file_name=file_name)
     logging.error(message)
 
 
@@ -119,7 +123,7 @@ def _now():
 
 
 class BigQueryError(Exception):
-    '''Exception raised whenever a BigQuery error happened''' 
+    '''Exception raised whenever a BigQuery error happened'''
 
     def __init__(self, errors):
         super().__init__(self._format(errors))

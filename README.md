@@ -9,3 +9,27 @@ API integration.
 
 For more details of how to execute the steps of this streaming pipeline, please take a look on 
 [Streaming data from Cloud Storage into BigQuery using Cloud Functions](https://cloud.google.com/solutions/streaming-data-from-cloud-storage-into-bigquery-using-cloud-functions) Tutorial.
+
+
+# 追記
+
+see: https://cloud.google.com/solutions/streaming-data-from-cloud-storage-into-bigquery-using-cloud-functions#handle_successful_streaming
+
+## 設定
+
+```sh
+make PROJECT_ID=[your-project-id] create-bucket
+make PROJECT_ID=[your-project-id] create-dataset
+make PROJECT_ID=[your-project-id] create-topic
+make PROJECT_ID=[your-project-id] deploy1
+make PROJECT_ID=[your-project-id] deploy2
+make PROJECT_ID=[your-project-id] deploy3
+make PROJECT_ID=[your-project-id] describe
+```
+
+## 動作確認
+
+```sh
+make PROJECT_ID=[your-project-id] upload
+make PROJECT_ID=[your-project-id] query
+```
