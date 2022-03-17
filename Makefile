@@ -24,7 +24,7 @@ create-dataset:
 
 create-topic:
 	gcloud pubsub topics create $(STREAMING_ERROR_TOPIC)
-	gcloud pubsub topics create $(STREAMING_ERROR_TOPIC)
+	gcloud pubsub topics create $(STREAMING_SUCCESS_TOPIC)
 
 deploy1:
 	gcloud functions deploy streaming --region=$(REGION) \
@@ -57,8 +57,8 @@ describe:
         --format="table[box](entryPoint, status, eventTrigger.eventType)"
 
 upload:
-	gsutil cp test_files/data.json gs://${FILES_SOURCE}
-	gsutil cp test_files/data_error.json gs://${FILES_SOURCE}
+	gsutil cp test_files/data.json gs://$(FILES_SOURCE)
+	gsutil cp test_files/data_error.json gs://$(FILES_SOURCE)
 
 query:
 	bq query 'select first_name, last_name, dob from mydataset.mytable'
