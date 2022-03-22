@@ -13,7 +13,7 @@ For more details of how to execute the steps of this streaming pipeline, please 
 
 # 追記
 
-see: https://cloud.google.com/solutions/streaming-data-from-cloud-storage-into-bigquery-using-cloud-functions#handle_successful_streaming
+see: https://cloud.google.com/solutions/streaming-data-from-cloud-storage-into-bigquery-using-cloud-functions
 
 ## 設定
 
