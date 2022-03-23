@@ -1,0 +1,6 @@
+venv/
+.python-version
+README.md
+__pycache__/
+.idea/
+
