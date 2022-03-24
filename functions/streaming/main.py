@@ -28,6 +28,7 @@ import os
 import traceback
 from datetime import datetime
 
+import functions_framework
 from google.api_core import retry
 from google.cloud import bigquery
 from google.cloud import firestore
@@ -47,11 +48,13 @@ CS = storage.Client()
 PS = pubsub_v1.PublisherClient()
 BQ = bigquery.Client()
 
-
-def streaming(data, context):
+@functions_framework.cloud_event
+def streaming(event):
     '''This function is executed whenever a file is added to Cloud Storage'''
-    bucket_name = data['bucket']
-    file_name = data['name']
+    logging.info(event)
+    # print(event)
+    bucket_name = event.data['bucket']
+    file_name = event.data['name']
     # db_ref = DB.document(u'streaming_files/%s' % file_name)
     # if _was_already_ingested(db_ref):
     #     _handle_duplication(db_ref)
