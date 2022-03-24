@@ -30,6 +30,7 @@ make PROJECT_ID=[your-project-id] describe
 ## 動作確認
 
 ```sh
-make PROJECT_ID=[your-project-id] upload
+make PROJECT_ID=[your-project-id] upload FILE_NAME=data.json
+make PROJECT_ID=[your-project-id] upload FILE_NAME=data_error.json
 make PROJECT_ID=[your-project-id] query
 ```
