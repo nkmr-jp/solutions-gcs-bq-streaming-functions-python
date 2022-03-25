@@ -12,5 +12,8 @@ python -m venv venv
 ```
 
 ```sh
-./venv/bin/functions_framework --target=move_file --signature-type=cloudevent  
+# subscribe success topic
+./venv/bin/functions_framework --target=move_file --signature-type=event --debug --port=8082
+# subscribe error topic
+./venv/bin/functions_framework --target=move_file --signature-type=event --debug --port=8083  
 ```
