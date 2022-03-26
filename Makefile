@@ -88,8 +88,32 @@ query: check
 
 
 ### Local test
+install:
+	cd functions/streaming; python -m venv venv; ./venv/bin/pip install -r requirements.txt
+	cd functions/move_file; python -m venv venv; ./venv/bin/pip install -r requirements.txt
 
-local-gcs-event: gen
+serve1:
+	cd functions/streaming; GCP_PROJECT=$(PROJECT_ID) ./venv/bin/functions_framework \
+	--target=streaming \
+	--signature-type=cloudevent \
+	--debug \
+	--port=8081
+
+serve2:
+	cd functions/move_file; GCP_PROJECT=$(PROJECT_ID) ./venv/bin/functions_framework \
+	--target=move_file \
+	--signature-type=cloudevent \
+	--debug \
+	--port=8082
+
+serve3:
+	cd functions/move_file; GCP_PROJECT=$(PROJECT_ID) ./venv/bin/functions_framework \
+	--target=move_file \
+	--signature-type=cloudevent \
+	--debug \
+	--port=8083
+
+send-gcs-event: gen
 	curl -X POST localhost:8081 \
 	-H "Content-Type: application/cloudevents+json" \
 	-d @./tmp/google.storage.object.finalize.json
@@ -100,19 +124,3 @@ gen: check
 	sed "s|{{FILES_SOURCE_BUCKET}}|$(FILES_SOURCE_BUCKET)|g" | \
 	sed "s|{{FILE_NAME}}|$(FILE_NAME)|g" > ./tmp/google.storage.object.finalize.json
 
-SCRIPT_DIR=tmp/python-pubsub/samples/snippets/
-local-init-pubsub:
-	cd tmp; git clone https://github.com/googleapis/python-pubsub.git
-	cd $(SCRIPT_DIR); pip install -r requirements.txt;
-	$(gcloud beta emulators pubsub env-init)
-
-local-create-topic: check
-	cd $(SCRIPT_DIR); python publisher.py $(PROJECT_ID) create $(STREAMING_SUCCESS_TOPIC)
-	cd $(SCRIPT_DIR); python subscriber.py $(PROJECT_ID) create-push $(STREAMING_SUCCESS_TOPIC) $gcf-(STREAMING_SUCCESS_TOPIC) http://localhost:8082
-	cd $(SCRIPT_DIR); python subscriber.py $(PROJECT_ID) create-push $(STREMING_ERROR_TOPIC) $gcf-(STREMING_ERROR_TOPIC) http://localhost:8083
-
-local-success-event: check
-	python publisher.py $(PROJECT_ID) publish $(STREAMING_SUCCESS_TOPIC)
-
-local-error-event: check
-	python publisher.py $(PROJECT_ID) publish $(STREAMING_ERROR_TOPIC)
