@@ -1,5 +1,6 @@
 # See: https://cloud.google.com/solutions/streaming-data-from-cloud-storage-into-bigquery-using-cloud-functions
 # See: https://github.com/GoogleCloudPlatform/functions-framework-python
+# See: https://cloud.google.com/functions/docs/running/calling
 
 PROJECT_ID=
 DATE=$(shell date '+%Y%m%d')
@@ -95,7 +96,7 @@ install:
 serve1:
 	cd functions/streaming; GCP_PROJECT=$(PROJECT_ID) ./venv/bin/functions_framework \
 	--target=streaming \
-	--signature-type=cloudevent \
+	--signature-type=event \
 	--debug \
 	--port=8081
 
@@ -113,14 +114,32 @@ serve3:
 	--debug \
 	--port=8083
 
-send-gcs-event: gen
-	curl -X POST localhost:8081 \
-	-H "Content-Type: application/cloudevents+json" \
-	-d @./tmp/google.storage.object.finalize.json
-
-gen: check
+send1:
 	@mkdir -p ./tmp
 	@cat ./cloudevents/google.storage.object.finalize.json | \
 	sed "s|{{FILES_SOURCE_BUCKET}}|$(FILES_SOURCE_BUCKET)|g" | \
-	sed "s|{{FILE_NAME}}|$(FILE_NAME)|g" > ./tmp/google.storage.object.finalize.json
+	sed "s|{{FILE_NAME}}|$(FILE_NAME)|g" > ./tmp/success.json
 
+	curl -X POST localhost:8081 \
+	-H "Content-Type: application/cloudevents+json" \
+	-d @./tmp/upload.json
+
+send2:
+	@mkdir -p ./tmp
+	@cat ./cloudevents/google.cloud.pubsub.topic.v1.messagePublished.json | \
+	sed "s|{{PROJECT_ID}}|$(PROJECT_ID)|g" | \
+	sed "s|{{TOPIC}}|$(STREAMING_ERROR_TOPIC)|g" > ./tmp/error.json
+
+	curl -X POST localhost:8082 \
+	-H "Content-Type: application/cloudevents+json" \
+	-d @./tmp/error.json
+
+send3:
+	@mkdir -p ./tmp
+	@cat ./cloudevents/google.cloud.pubsub.topic.v1.messagePublished.json | \
+	sed "s|{{PROJECT_ID}}|$(PROJECT_ID)|g" | \
+	sed "s|{{TOPIC}}|$(STREAMING_SUCCESS_TOPIC)|g" > ./tmp/success.json
+
+	curl -X POST localhost:8082 \
+	-H "Content-Type: application/cloudevents+json" \
+	-d @./tmp/success.json

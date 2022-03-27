@@ -1,0 +1,21 @@
+{
+  "attributes": {
+    "id": "1234567890",
+    "time": "2022-03-26T22:32:24.309Z",
+    "specversion": "1.0",
+    "datacontenttype": "application/json",
+    "type": "google.cloud.pubsub.topic.v1.messagePublished",
+    "source": "//pubsub.googleapis.com/projects/{{PROJECT_ID}}/topics/{{TOPIC}}"
+  },
+  "data": {
+    "message": {
+      "@type": "type.googleapis.com/google.pubsub.v1.PubsubMessage",
+      "attributes": {
+        "file_name": "data.json"
+      },
+      "data": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+      "messageId": "1234567890",
+      "publishTime": "2022-03-26T22:32:24.309Z"
+    }
+  }
+}

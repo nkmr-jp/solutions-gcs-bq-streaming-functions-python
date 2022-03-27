@@ -1,0 +1,19 @@
+{
+  "context": {
+    "event_id": 3953418127319696,
+    "timestamp": "2022-03-27T07:50:58.869Z",
+    "event_type": "google.pubsub.topic.publish",
+    "resource": {
+      "service": "pubsub.googleapis.com",
+      "name": "projects/{{PROJECT_ID}}/topics/{{TOPIC}}",
+      "type": "type.googleapis.com/google.pubsub.v1.PubsubMessage"
+    }
+  },
+  "data": {
+    "@type": "type.googleapis.com/google.pubsub.v1.PubsubMessage",
+    "attributes": {
+      "file_name": "{{FILE_NAME}}"
+    },
+    "data": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  }
+}

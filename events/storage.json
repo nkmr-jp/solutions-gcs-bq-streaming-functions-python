@@ -1,0 +1,32 @@
+{
+  "context": {
+    "event_id": 3953358688762732,
+    "timestamp": "2022-03-27T07:40:46.328Z",
+    "event_type": "google.storage.object.finalize",
+    "resource": {
+      "service": "storage.googleapis.com",
+      "name": "projects/_/buckets/{{FILES_SOURCE_BUCKET}}/objects/{{FILE_NAME}}",
+      "type": "storage#object"
+    }
+  },
+  "data": {
+    "bucket": "{{FILES_SOURCE_BUCKET}}",
+    "contentLanguage": "en",
+    "contentType": "application/json",
+    "crc32c": "XXXXX==",
+    "etag": "XXXXXXXXXXXXXXX=",
+    "generation": "1648366795205625",
+    "id": "{{FILES_SOURCE_BUCKET}}/{{FILE_NAME}}/1648366795205625",
+    "kind": "storage#object",
+    "md5Hash": "XXXXXXXXXXXXXXXXXXXXXX==",
+    "mediaLink": "https://www.googleapis.com/download/storage/v1/b/{{FILES_SOURCE_BUCKET}}/o/{{FILE_NAME}}?generation=1648366795205625&alt=media",
+    "metageneration": "1",
+    "name": "{{FILE_NAME}}",
+    "selfLink": "https://www.googleapis.com/storage/v1/b/{{FILES_SOURCE_BUCKET}}/o/{{FILE_NAME}}",
+    "size": "312",
+    "storageClass": "REGIONAL",
+    "timeCreated": "2022-03-27T07:39:55.215Z",
+    "timeStorageClassUpdated": "2022-03-27T07:39:55.215Z",
+    "updated": "2022-03-27T07:39:55.215Z"
+  }
+}
